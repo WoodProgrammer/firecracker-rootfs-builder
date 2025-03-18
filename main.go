@@ -26,15 +26,19 @@ func main() {
 		log.Err(err).Msg("Error while running parserCli.ParseYamlFile()")
 	}
 
-	err = buildCLient.BuildExportDockerImage(result.Context, result.DockerfilePath, result.TargetDirectory)
-	if err != nil {
-		log.Err(err).Msg("Error while running buildCLient.BuildExportDockerImage()")
-	}
-
 	err = rootFsClient.CreateFileDD(10, "ops")
 	if err != nil {
 		log.Err(err).Msg("Error while running rootFsClient.CreateFileDD()")
 	}
-	// Extract rootfs components now
+
+	fsErr := rootFsClient.FormatandMountFileSystem("ops", result.TargetDirectory)
+	if fsErr != nil {
+		log.Err(fsErr).Msg("Error while running rootFsClient.FormatFileSystem()")
+	}
+
+	err = buildCLient.BuildExportDockerImage(result.Context, result.DockerfilePath, result.TargetDirectory)
+	if err != nil {
+		log.Err(err).Msg("Error while running buildCLient.BuildExportDockerImage()")
+	}
 
 }

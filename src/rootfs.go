@@ -1,16 +1,42 @@
 package src
 
 import (
+	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/rs/zerolog/log"
 )
 
 type RootFS interface {
 	CreateFileDD(size int64, fileName string) error
+	FormatandMountFileSystem(path, targetDirectory string) error
 }
 
 type RootFSHandler struct{}
+
+func (rootfs *RootFSHandler) FormatandMountFileSystem(path, targetDirectory string) error {
+	cmd := exec.Command("mkfs.ext4", path)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Err(err).Msg("Error running mkfs.ext4:")
+		log.Info().Msgf("Output: %s", string(output))
+		return err
+	}
+
+	log.Info().Msgf("Output: %s", string(output))
+
+	cmd = exec.Command(fmt.Sprintf("mount", path, targetDirectory))
+	output, err = cmd.CombinedOutput()
+	if err != nil {
+		log.Err(err).Msg("Error running mount")
+		log.Info().Msgf("Mount exec output: %s", string(output))
+		return err
+	}
+
+	log.Info().Msgf("Mount exec output: %s", string(output))
+	return nil
+}
 
 func (rootfs *RootFSHandler) CreateFileDD(size int64, fileName string) error {
 
