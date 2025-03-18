@@ -1,7 +1,26 @@
 package main
 
-import "fmt"
+import (
+	src "github.com/WoodProgrammer/firecracker-vmbuilder/src"
+	"github.com/rs/zerolog/log"
+)
 
+func newBuildClient() src.Builder {
+	return &src.BuildHandler{}
+}
+
+func newParserClient() src.Parser {
+	return &src.ParseHandler{}
+}
 func main() {
-	fmt.Println("This is firecracker vmbuilder 0.0.1")
+	parserCli := newParserClient()
+	buildCLi := newBuildClient()
+
+	result, err := parserCli.ParseYamlFile("config.yaml")
+	if err != nil {
+		log.Err(err).Msg("Error while running parserCli.ParseYamlFile()")
+	}
+
+	buildCLi.BuildExportDockerImage(result.Context, result.DockerfilePath, result.TargetDirectory)
+
 }
