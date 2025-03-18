@@ -1,8 +1,15 @@
 package main
 
 import (
+	"os"
+
 	src "github.com/WoodProgrammer/firecracker-vmbuilder/src"
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/cobra"
+)
+
+var (
+	configFile string
 )
 
 func newBuildClient() src.Builder {
@@ -16,12 +23,13 @@ func newParserClient() src.Parser {
 func newRootFSClient() src.RootFS {
 	return &src.RootFSHandler{}
 }
-func main() {
+
+func HandleRootFS() {
 	parserClient := newParserClient()
 	buildCLient := newBuildClient()
 	rootFsClient := newRootFSClient()
 
-	result, err := parserClient.ParseYamlFile("config.yaml")
+	result, err := parserClient.ParseYamlFile(configFile)
 	if err != nil {
 		log.Err(err).Msg("Error while running parserCli.ParseYamlFile()")
 	}
@@ -41,4 +49,22 @@ func main() {
 		log.Err(err).Msg("Error while running buildCLient.BuildExportDockerImage()")
 	}
 
+}
+
+func main() {
+	var rootCmd = &cobra.Command{
+		Use:   "rootfsCreator",
+		Short: "CLI tool to manage RootFS for firecracker micro VMs",
+		Run: func(cmd *cobra.Command, args []string) {
+			HandleRootFS()
+		},
+	}
+	rootCmd.Flags().StringVarP(&configFile, "config", "C", "config.yaml", "Config file of RootFS creation")
+
+	rootCmd.MarkFlagRequired("config")
+
+	if err := rootCmd.Execute(); err != nil {
+		log.Err(err).Msg("rootfsCreator execution failed")
+		os.Exit(1)
+	}
 }

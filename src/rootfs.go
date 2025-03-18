@@ -1,7 +1,6 @@
 package src
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 
@@ -26,7 +25,7 @@ func (rootfs *RootFSHandler) FormatandMountFileSystem(path, targetDirectory stri
 
 	log.Info().Msgf("Output: %s", string(output))
 
-	cmd = exec.Command(fmt.Sprintf("mount", path, targetDirectory))
+	cmd = exec.Command("mount", path, targetDirectory)
 	output, err = cmd.CombinedOutput()
 	if err != nil {
 		log.Err(err).Msg("Error running mount")
