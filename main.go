@@ -10,6 +10,8 @@ import (
 
 var (
 	configFile string
+	rootFsName string
+	rootFsSize int64
 )
 
 func newBuildClient() src.Builder {
@@ -34,12 +36,12 @@ func HandleRootFS() {
 		log.Err(err).Msg("Error while running parserCli.ParseYamlFile()")
 	}
 
-	err = rootFsClient.CreateFileDD(10, "ops")
+	err = rootFsClient.CreateFileDD(rootFsSize, rootFsName)
 	if err != nil {
 		log.Err(err).Msg("Error while running rootFsClient.CreateFileDD()")
 	}
 
-	fsErr := rootFsClient.FormatandMountFileSystem("ops", result.TargetDirectory)
+	fsErr := rootFsClient.FormatandMountFileSystem(rootFsName, result.TargetDirectory)
 	if fsErr != nil {
 		log.Err(fsErr).Msg("Error while running rootFsClient.FormatFileSystem()")
 	}
@@ -60,6 +62,8 @@ func main() {
 		},
 	}
 	rootCmd.Flags().StringVarP(&configFile, "config", "C", "config.yaml", "Config file of RootFS creation")
+	rootCmd.Flags().StringVarP(&rootFsName, "filesystem-name", "F", "rootfs", "Name of rootfs")
+	rootCmd.Flags().Int64VarP(&rootFsSize, "filesystem-size", "S", 10, "Size of rootfs")
 
 	rootCmd.MarkFlagRequired("config")
 

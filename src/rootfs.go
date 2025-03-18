@@ -1,6 +1,7 @@
 package src
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 
@@ -10,6 +11,7 @@ import (
 type RootFS interface {
 	CreateFileDD(size int64, fileName string) error
 	FormatandMountFileSystem(path, targetDirectory string) error
+	SyncFsOCIImg(path, targetDirectory string) error
 }
 
 type RootFSHandler struct{}
@@ -34,6 +36,10 @@ func (rootfs *RootFSHandler) FormatandMountFileSystem(path, targetDirectory stri
 	}
 
 	log.Info().Msgf("Mount exec output: %s", string(output))
+	err = rootfs.SyncFsOCIImg(targetDirectory, path)
+	if err != nil {
+		log.Err(err).Msg("Error while running moveFile")
+	}
 	return nil
 }
 
@@ -58,5 +64,18 @@ func (rootfs *RootFSHandler) CreateFileDD(size int64, fileName string) error {
 	}
 
 	log.Info().Msg("rootfs.ext4 created successfully")
+	return nil
+}
+
+func (rootfs *RootFSHandler) SyncFsOCIImg(source, destination string) error {
+
+	cmd := exec.Command("mv", fmt.Sprintf("%s/*", source), destination)
+	err := cmd.Run()
+	if err != nil {
+		log.Err(err).Msg("Error while running mv command")
+		return err
+	}
+	log.Info().Msg("OCI image and filesystem synced successfully.")
+
 	return nil
 }
