@@ -17,7 +17,7 @@ func (buildClient *BuildHandler) BuildExportDockerImage(context, dockerFile, tar
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Err(err).Msg("docker buildx error :")
+		log.Err(err).Msgf("docker buildx error : %s", output)
 		return err
 	}
 	log.Info().Msgf("Build Result %s", string(output))
