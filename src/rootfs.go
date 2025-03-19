@@ -45,11 +45,6 @@ func (rootfs *RootFSHandler) FormatandMountFileSystem(path, targetDirectory stri
 	}
 
 	log.Info().Msgf("Mount exec output: %s", string(output))
-	err = rootfs.SyncFsOCIImg(targetDirectory, path)
-	if err != nil {
-		log.Err(err).Msg("Error while running moveFile")
-		return err
-	}
 	return nil
 }
 
