@@ -1,0 +1,4 @@
+image: alpine
+docker_file: Dockerfile
+context: "."
+target_directory: "alpine-rootfs"
