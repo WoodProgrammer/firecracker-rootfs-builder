@@ -1,4 +1,4 @@
-<div><img src="docs/img/img.png" width="100"/><h1>Firecracker RootFS Handler</h1></div>
+<div><img src="docs/img/img.png" width="100"/><h1>Firecracker RootFS Builder</h1></div>
 
 Firecracker RootFS handler is a simple project to create root-file-system with Docker images in ext4 format and allows you to run them in micro-vms by Firecracker.
 
