@@ -51,11 +51,6 @@ func HandleRootFS() {
 		log.Err(err).Msg("Error while running buildCLient.BuildExportDockerImage()")
 	}
 
-	err = rootFsClient.SyncFsOCIImg(result.TargetDirectory, "")
-	if err != nil {
-		log.Err(err).Msg("Error while running moveFile")
-	}
-
 }
 
 func main() {
