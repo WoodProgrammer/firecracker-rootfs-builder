@@ -78,8 +78,10 @@ func (rootfs *RootFSHandler) CreateFileDD(size int64, fileName string) error {
 }
 
 func (rootfs *RootFSHandler) SyncFsOCIImg(source, destination string) error {
+	prDir := fmt.Sprintf("tmp-%s/*", source)
+	cmd := exec.Command("mv", prDir, source)
+	log.Info().Msgf("Running mv between %s - %s", prDir, source)
 
-	cmd := exec.Command("mv", fmt.Sprintf("tmp-%s/*", source), source)
 	err := cmd.Run()
 	if err != nil {
 		log.Err(err).Msg("Error while running mv command")
