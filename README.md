@@ -28,14 +28,14 @@ Run the tool with the required options:
 ```sh
 
 cat <<EOF>config.yaml
-
 image: alpine
 docker_file: Dockerfile
 context: "."
 target_directory: "alpine-rootfs"
-
 EOF
+```
 
+```sh
 ./fco -C config.yaml
 ```
 
@@ -75,8 +75,7 @@ Contributions are welcome! Feel free to submit issues or pull requests to improv
 
 For any questions or feedback, feel free to open an issue on GitHub.
 
-## TO DO ;
+# TODO ;
 
-* Adjustable command args
 * Registry ability
 * More use cases on test suits
