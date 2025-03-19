@@ -17,8 +17,17 @@ type RootFS interface {
 type RootFSHandler struct{}
 
 func (rootfs *RootFSHandler) FormatandMountFileSystem(path, targetDirectory string) error {
-	cmd := exec.Command("mkfs.ext4", path)
+
+	cmd := exec.Command("mkdir", targetDirectory)
 	output, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Err(err).Msg("Error while running mkdir")
+		log.Info().Msgf("Mkdir exec output: %s", string(output))
+		return err
+	}
+
+	cmd = exec.Command("mkfs.ext4", path)
+	output, err = cmd.CombinedOutput()
 	if err != nil {
 		log.Err(err).Msg("Error running mkfs.ext4:")
 		log.Info().Msgf("Output: %s", string(output))
@@ -39,6 +48,7 @@ func (rootfs *RootFSHandler) FormatandMountFileSystem(path, targetDirectory stri
 	err = rootfs.SyncFsOCIImg(targetDirectory, path)
 	if err != nil {
 		log.Err(err).Msg("Error while running moveFile")
+		return err
 	}
 	return nil
 }
