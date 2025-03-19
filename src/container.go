@@ -13,7 +13,7 @@ type Builder interface {
 type BuildHandler struct{}
 
 func (buildClient *BuildHandler) BuildExportDockerImage(context, dockerFile, targetDirectory string) error {
-	cmd := exec.Command("docker", "buildx", "build", "-f", dockerFile, "--output", targetDirectory, context)
+	cmd := exec.Command("docker", "buildx", "build", "-f", dockerFile, "--output", "tmp-"+targetDirectory, context)
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
