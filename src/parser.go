@@ -23,7 +23,7 @@ type ParseHandler struct{}
 
 func (parser *ParseHandler) ParseYamlFile(configFile string) (RootFSManifest, error) {
 	var config RootFSManifest
-	data, err := os.ReadFile("config.yaml")
+	data, err := os.ReadFile(configFile)
 
 	if err != nil {
 		log.Err(err).Msg("Error reading YAML file:")
