@@ -18,7 +18,7 @@ type RootFSHandler struct{}
 
 func (rootfs *RootFSHandler) FormatandMountFileSystem(path, targetDirectory string) error {
 
-	cmd := exec.Command("mkdir -p", targetDirectory)
+	cmd := exec.Command("mkdir", "-p", targetDirectory)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Err(err).Msg("Error while running mkdir")
