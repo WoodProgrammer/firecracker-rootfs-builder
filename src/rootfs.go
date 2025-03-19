@@ -77,7 +77,9 @@ func (rootfs *RootFSHandler) SyncFsOCIImg(source, destination string) error {
 	cmd := exec.Command("mv", prDir, source)
 	log.Info().Msgf("Running mv between %s - %s", prDir, source)
 
-	err := cmd.Run()
+	output, err := cmd.CombinedOutput()
+	log.Info().Msgf("mv command output %s", output)
+
 	if err != nil {
 		log.Err(err).Msg("Error while running mv command")
 		return err
