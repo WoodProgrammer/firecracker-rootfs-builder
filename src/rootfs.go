@@ -16,33 +16,31 @@ type RootFSHandler struct{}
 
 func (rootfs *RootFSHandler) FormatandMountFileSystem(path, targetDirectory string) error {
 
-	cmd := exec.Command("mkdir", "-p", targetDirectory)
-	output, err := cmd.CombinedOutput()
+	err := os.Mkdir(targetDirectory, os.ModeDir)
 	if err != nil {
-		log.Err(err).Msg("Error while running mkdir")
-		log.Info().Msgf("Mkdir exec output: %s", string(output))
+		log.Err(err).Msg("Error while calling os.Mkdir")
 		return err
 	}
 
-	cmd = exec.Command("mkfs.ext4", path)
-	output, err = cmd.CombinedOutput()
+	cmd := exec.Command("mkfs.ext4", path)
+	output, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Err(err).Msg("Error running mkfs.ext4:")
 		log.Info().Msgf("Output: %s", string(output))
 		return err
 	}
 
-	log.Info().Msgf("Output: %s", string(output))
+	log.Info().Msgf("Output of mkfs.ext4 : %s", string(output))
 
 	cmd = exec.Command("mount", path, targetDirectory)
 	output, err = cmd.CombinedOutput()
 	if err != nil {
-		log.Err(err).Msg("Error running mount")
-		log.Info().Msgf("Mount exec output: %s", string(output))
+		log.Err(err).Msg("Error running mount command")
+		log.Info().Msgf("Mount errored status: %s", string(output))
 		return err
 	}
 
-	log.Info().Msgf("Mount exec output: %s", string(output))
+	log.Info().Msgf("Mount status: %s", string(output))
 	return nil
 }
 
