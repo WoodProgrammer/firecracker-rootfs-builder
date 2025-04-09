@@ -34,21 +34,25 @@ func HandleRootFS() {
 	result, err := parserClient.ParseYamlFile(configFile)
 	if err != nil {
 		log.Err(err).Msg("Error while running parserCli.ParseYamlFile()")
+		os.Exit(1)
 	}
 
 	err = rootFsClient.CreateFileDD(rootFsSize, rootFsName)
 	if err != nil {
 		log.Err(err).Msg("Error while running rootFsClient.CreateFileDD()")
+		os.Exit(1)
 	}
 
 	fsErr := rootFsClient.FormatandMountFileSystem(rootFsName, result.TargetDirectory)
 	if fsErr != nil {
 		log.Err(fsErr).Msg("Error while running rootFsClient.FormatFileSystem()")
+		os.Exit(1)
 	}
 
 	err = buildCLient.BuildExportDockerImage(result.Context, result.DockerfilePath, result.TargetDirectory)
 	if err != nil {
 		log.Err(err).Msg("Error while running buildCLient.BuildExportDockerImage()")
+		os.Exit(1)
 	}
 
 }

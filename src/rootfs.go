@@ -19,6 +19,7 @@ func (rootfs *RootFSHandler) FormatandMountFileSystem(path, targetDirectory stri
 	err := os.Mkdir(targetDirectory, os.ModeDir)
 	if err != nil {
 		log.Err(err).Msg("Error while calling os.Mkdir")
+		return err
 	}
 
 	cmd := exec.Command("mkfs.ext4", path)
@@ -29,17 +30,17 @@ func (rootfs *RootFSHandler) FormatandMountFileSystem(path, targetDirectory stri
 		return err
 	}
 
-	log.Info().Msgf("Output: %s", string(output))
+	log.Info().Msgf("Output of mkfs.ext4 : %s", string(output))
 
 	cmd = exec.Command("mount", path, targetDirectory)
 	output, err = cmd.CombinedOutput()
 	if err != nil {
-		log.Err(err).Msg("Error running mount")
-		log.Info().Msgf("Mount exec output: %s", string(output))
+		log.Err(err).Msg("Error running mount command")
+		log.Info().Msgf("Mount errored status: %s", string(output))
 		return err
 	}
 
-	log.Info().Msgf("Mount exec output: %s", string(output))
+	log.Info().Msgf("Mount status: %s", string(output))
 	return nil
 }
 
