@@ -16,16 +16,13 @@ type RootFSHandler struct{}
 
 func (rootfs *RootFSHandler) FormatandMountFileSystem(path, targetDirectory string) error {
 
-	cmd := exec.Command("mkdir", "-p", targetDirectory)
-	output, err := cmd.CombinedOutput()
+	err := os.Mkdir(targetDirectory, os.ModeDir)
 	if err != nil {
-		log.Err(err).Msg("Error while running mkdir")
-		log.Info().Msgf("Mkdir exec output: %s", string(output))
-		return err
+		log.Err(err).Msg("Error while calling os.Mkdir")
 	}
 
-	cmd = exec.Command("mkfs.ext4", path)
-	output, err = cmd.CombinedOutput()
+	cmd := exec.Command("mkfs.ext4", path)
+	output, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Err(err).Msg("Error running mkfs.ext4:")
 		log.Info().Msgf("Output: %s", string(output))
